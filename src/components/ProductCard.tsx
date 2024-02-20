@@ -1,23 +1,25 @@
 import Image from "./Image";
+import { IProduct } from "./interfaces";
 import Button from "./ui/Button";
+import { txtSlicer } from "./utils/functions";
 
-interface IProps {}
+interface IProps {
+  product: IProduct;
+}
 
-const ProductCard = ({}: IProps) => {
+const ProductCard = ({ product }: IProps) => {
+  const { title, description, imageURL } = product;
   return (
     <div className="flex flex-col p-4 rounded-md border-2 border-gray-200">
       <Image
-        imageSrc="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+        imageSrc={imageURL}
         imageAlt="Product Name"
         className="rounded-md"
       />
 
       <div className="mt-2">
-        <h1 className="text-xl font-semibold mb-3">Nike Shoes</h1>
-        <p className="text-sm text-gray-500">
-          As luxury T-Shirt is just as distinctive and can be trimmed with
-          premium materia
-        </p>
+        <h1 className="text-xl font-semibold mb-3">{title}</h1>
+        <p className="text-sm text-gray-500">{txtSlicer(description)}</p>
       </div>
 
       <div className="flex items-center gap-2 mt-4">
