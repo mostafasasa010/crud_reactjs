@@ -1,20 +1,27 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import ProductCard from "./components/ProductCard";
 import { formInputsList, productList } from "./components/data";
 import Button from "./components/ui/Button";
 import Modal from "./components/ui/Modal";
 import Input from "./components/ui/Input";
+import { IProduct } from "./components/interfaces";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
+  const [product, setProduct] = useState<IProduct>({
+    title: "",
+    description: "",
+    imageURL: "",
+    price: "",
+    colors: [],
+    category: {
+      name: "",
+      imageURL: "",
+    },
+  });
 
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
-  }
+  const closeModal = () => setIsOpen(false);
+  const openModal = () => setIsOpen(true);
   const formHandle = formInputsList.map((input, index) => {
     return (
       <div className="flex flex-col" key={index}>
@@ -24,13 +31,27 @@ function App() {
         >
           {input.label}
         </label>
-        <Input id={input.id} name={input.name} type={input.type} />
+        <Input
+          id={input.id}
+          name={input.name}
+          type={input.type}
+          onChange={(e) => onChangeHandle(e)}
+          value={product[input.name]}
+        />
       </div>
     );
   });
   const productHandle = productList.map((product) => (
     <ProductCard key={product.id} product={product} />
   ));
+  const onChangeHandle = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = event.target;
+    setProduct({
+      ...product,
+      // Iam not understand this line
+      [name]: value,
+    });
+  };
   return (
     <main className="container mx-auto md:container xl:container 2xl:container lg:px-10">
       <Button className="bg-indigo-500" width="w-full" onClick={openModal}>
