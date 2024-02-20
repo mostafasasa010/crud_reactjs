@@ -10,7 +10,7 @@ interface IProps {
 const ProductCard = ({ product }: IProps) => {
   const { title, description, imageURL } = product;
   return (
-    <div className="flex flex-col p-4 rounded-md border-2 border-gray-200">
+    <div className="flex flex-col p-4 rounded-md border-2 border-gray-200 justify-between lg:max-w-xs mx-auto">
       <Image
         imageSrc={imageURL}
         imageAlt="Product Name"
