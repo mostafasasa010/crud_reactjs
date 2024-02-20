@@ -1,11 +1,13 @@
+import Image from "./Image";
+
 interface IProps {}
 
 const ProductCard = ({}: IProps) => {
   return (
     <div className="flex flex-col p-4 rounded-md border-2 border-gray-200">
-      <img
-        src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-        alt="Product Name"
+      <Image
+        imageSrc="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+        imageAlt="Product Name"
         className="rounded-md"
       />
 
@@ -25,10 +27,10 @@ const ProductCard = ({}: IProps) => {
 
       <div className="flex items-center justify-between mt-4">
         <span className="text-lg text-indigo-500 font-semibold ">$350</span>
-        <img
-          src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-          alt="Product Name"
-          className="w-10 h-10 rounded-full"
+        <Image
+          imageSrc="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+          imageAlt="Product Name"
+          className="w-10 h-10 rounded-full object-cover"
         />
       </div>
 
