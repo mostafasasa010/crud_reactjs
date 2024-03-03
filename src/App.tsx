@@ -19,7 +19,6 @@ function App() {
       imageURL: "",
     },
   });
-
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
   const formHandle = formInputsList.map((input, index) => {
@@ -48,7 +47,6 @@ function App() {
     const { value, name } = event.target;
     setProduct({
       ...product,
-      // Iam not understand this line
       [name]: value,
     });
   };
