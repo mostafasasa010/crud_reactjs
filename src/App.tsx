@@ -1,12 +1,13 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import ProductCard from "./components/ProductCard";
-import { formInputsList, productList } from "./data";
+import { colors, formInputsList, productList } from "./data";
 import Button from "./components/ui/Button";
 import Modal from "./components/ui/Modal";
 import Input from "./components/ui/Input";
 import { IProduct } from "./interfaces";
 import { productValidation } from "./validation";
 import ErrorsMsg from "./components/ErrorsMsg";
+import CircleColors from "./components/CircleColors";
 
 function App() {
   // Constants
@@ -60,9 +61,9 @@ function App() {
     }
   };
   // Renders
-  const formRender = formInputsList.map((input, index) => {
+  const formRender = formInputsList.map((input) => {
     return (
-      <div className="flex flex-col" key={index}>
+      <div className="flex flex-col" key={input.id}>
         <label
           className="mb-1 text-sm font-medium text-gray-700"
           htmlFor={input.id}
@@ -83,6 +84,14 @@ function App() {
   const productRender = productList.map((product) => (
     <ProductCard key={product.id} product={product} />
   ));
+  const colorsRender = colors.map((color) => (
+    <CircleColors
+      color={color}
+      key={color}
+      onClick={() => console.log(color)}
+    />
+  ));
+
   return (
     <main className="container mx-auto md:container xl:container 2xl:container lg:px-10">
       <Button className="bg-indigo-500" width="w-full" onClick={openModal}>
@@ -94,6 +103,9 @@ function App() {
       <Modal isOpen={isOpen} closeModal={closeModal} title="Add A New Product">
         <form className="space-y-3" onSubmit={handleSubmit}>
           {formRender}
+          <div className="flex items-center flex-wrap gap-1 mt-4">
+            {colorsRender}
+          </div>
           <div className="flex items-center gap-3">
             <Button className="bg-indigo-500" width="w-full">
               Submit
