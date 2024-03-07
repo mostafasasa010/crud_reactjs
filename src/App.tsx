@@ -5,6 +5,7 @@ import Button from "./components/ui/Button";
 import Modal from "./components/ui/Modal";
 import Input from "./components/ui/Input";
 import { IProduct } from "./components/interfaces";
+import { productValidation } from "./components/validation";
 
 function App() {
   // Constants
@@ -54,13 +55,20 @@ function App() {
       [name]: value,
     });
   };
-  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
-    event.preventDefault();
-    console.log(product);
-  };
   const handleCancel = (): void => {
     setProduct(defaultProductObj);
     closeModal();
+    console.log(product);
+  };
+  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    const errors = productValidation({
+      title: product.title,
+      description: product.description,
+      price: product.price,
+      imageURL: product.imageURL,
+    });
+    console.log(errors);
     console.log(product);
   };
   return (
