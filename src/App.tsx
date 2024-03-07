@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import ProductCard from "./components/ProductCard";
 import { formInputsList, productList } from "./components/data";
 import Button from "./components/ui/Button";
@@ -7,8 +7,8 @@ import Input from "./components/ui/Input";
 import { IProduct } from "./components/interfaces";
 
 function App() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [product, setProduct] = useState<IProduct>({
+  // Constants
+  const defaultProductObj = {
     title: "",
     description: "",
     imageURL: "",
@@ -18,7 +18,11 @@ function App() {
       name: "",
       imageURL: "",
     },
-  });
+  };
+  // States
+  const [isOpen, setIsOpen] = useState(false);
+  const [product, setProduct] = useState<IProduct>(defaultProductObj);
+  // Handlers
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
   const formHandle = formInputsList.map((input, index) => {
@@ -50,6 +54,15 @@ function App() {
       [name]: value,
     });
   };
+  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    console.log(product);
+  };
+  const handleCancel = (): void => {
+    setProduct(defaultProductObj);
+    closeModal();
+    console.log(product);
+  };
   return (
     <main className="container mx-auto md:container xl:container 2xl:container lg:px-10">
       <Button className="bg-indigo-500" width="w-full" onClick={openModal}>
@@ -59,17 +72,21 @@ function App() {
         {productHandle}
       </div>
       <Modal isOpen={isOpen} closeModal={closeModal} title="Add A New Product">
-        <div className="space-y-3">
+        <form className="space-y-3" onSubmit={handleSubmit}>
           {formHandle}
           <div className="flex items-center gap-3">
             <Button className="bg-indigo-500" width="w-full">
               Submit
             </Button>
-            <Button className="bg-gray-500" width="w-full">
+            <Button
+              className="bg-gray-500"
+              width="w-full"
+              onClick={handleCancel}
+            >
               Cancel
             </Button>
           </div>
-        </div>
+        </form>
       </Modal>
     </main>
   );
