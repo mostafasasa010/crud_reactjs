@@ -1,7 +1,7 @@
 import Image from "./Image";
-import { IProduct } from "./interfaces";
+import { IProduct } from "../interfaces";
 import Button from "./ui/Button";
-import { txtSlicer } from "./utils/functions";
+import { txtSlicer } from "../utils/functions";
 
 interface IProps {
   product: IProduct;
