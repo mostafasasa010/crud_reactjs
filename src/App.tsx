@@ -8,6 +8,7 @@ import { IProduct } from "./interfaces";
 import { productValidation } from "./validation";
 import ErrorsMsg from "./components/ErrorsMsg";
 import CircleColors from "./components/CircleColors";
+import { v4 as uuid } from "uuid";
 
 function App() {
   // Constants
@@ -31,6 +32,7 @@ function App() {
     price: "",
   });
   const [tmpColors, setTmpColors] = useState<string[]>([]);
+  const [products, setProducts] = useState<IProduct[]>(productList);
   const [product, setProduct] = useState<IProduct>(defaultProductObj);
   // Handlers
   const closeModal = () => setIsOpen(false);
@@ -62,6 +64,13 @@ function App() {
       setErrors(errors);
       return;
     }
+    setProducts((prev) => [
+      { ...product, id: uuid(), colors: tmpColors },
+      ...prev,
+    ]);
+    setProduct(defaultProductObj);
+    setTmpColors([]);
+    closeModal();
   };
   // Renders
   const formRender = formInputsList.map((input) => {
@@ -84,7 +93,7 @@ function App() {
       </div>
     );
   });
-  const productRender = productList.map((product) => (
+  const productRender = products.map((product) => (
     <ProductCard key={product.id} product={product} />
   ));
   const colorsRender = colors.map((color) => (
@@ -117,8 +126,12 @@ function App() {
 
   return (
     <main className="container mx-auto md:container xl:container 2xl:container lg:px-10">
-      <Button className="bg-indigo-500" width="w-full" onClick={openModal}>
-        Add
+      <Button
+        className="block bg-indigo-700 hover:bg-indigo-800 mx-auto my-10 font-medium rounded-lg text-white px-3 py-3 duration-200"
+        width="w-fit"
+        onClick={openModal}
+      >
+        Build a product
       </Button>
       <div className="grid gap-4 lg:gap-6 xl:gap-8 2xl:gap10 p-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {productRender}
