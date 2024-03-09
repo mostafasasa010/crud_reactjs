@@ -30,6 +30,7 @@ function App() {
     imageURL: "",
     price: "",
   });
+  const [tmpColors, setTmpColors] = useState<string[]>([]);
   const [product, setProduct] = useState<IProduct>(defaultProductObj);
   // Handlers
   const closeModal = () => setIsOpen(false);
@@ -45,6 +46,8 @@ function App() {
       [name]: "",
     });
   };
+  const handleTmpColors = (color: string) =>
+    setTmpColors((prev) => prev.filter((item) => item !== color));
   const handleCancel = (): void => {
     setProduct(defaultProductObj);
     closeModal();
@@ -87,10 +90,30 @@ function App() {
   const colorsRender = colors.map((color) => (
     <CircleColors
       color={color}
+      title={color}
       key={color}
-      onClick={() => console.log(color)}
+      onClick={() => {
+        if (tmpColors.includes(color)) {
+          handleTmpColors(color);
+          return;
+        }
+        setTmpColors((prev) => [...prev, color]);
+      }}
     />
   ));
+  const tmpColorsRender = tmpColors.map((color) => {
+    return (
+      <span
+        className="py-[2px] px-[6px] rounded-md text-white cursor-pointer text-sm font-semibold"
+        style={{ backgroundColor: color }}
+        title={color}
+        key={color}
+        onClick={() => handleTmpColors(color)}
+      >
+        {color}
+      </span>
+    );
+  });
 
   return (
     <main className="container mx-auto md:container xl:container 2xl:container lg:px-10">
@@ -105,6 +128,9 @@ function App() {
           {formRender}
           <div className="flex items-center flex-wrap gap-1 mt-4">
             {colorsRender}
+          </div>
+          <div className="flex items-center flex-wrap gap-1 mt-4">
+            {tmpColorsRender}
           </div>
           <div className="flex items-center gap-3">
             <Button className="bg-indigo-500" width="w-full">
