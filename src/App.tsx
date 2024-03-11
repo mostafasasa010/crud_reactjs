@@ -1,6 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import ProductCard from "./components/ProductCard";
-import { colors, formInputsList, productList } from "./data";
+import { categories, colors, formInputsList, productList } from "./data";
 import Button from "./components/ui/Button";
 import Modal from "./components/ui/Modal";
 import Input from "./components/ui/Input";
@@ -9,6 +9,7 @@ import { productValidation } from "./validation";
 import ErrorsMsg from "./components/ErrorsMsg";
 import CircleColors from "./components/CircleColors";
 import { v4 as uuid } from "uuid";
+import Select from "./components/ui/Select";
 
 function App() {
   // Constants
@@ -34,6 +35,8 @@ function App() {
   const [tmpColors, setTmpColors] = useState<string[]>([]);
   const [products, setProducts] = useState<IProduct[]>(productList);
   const [product, setProduct] = useState<IProduct>(defaultProductObj);
+  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+  const [validateColors, setValidateColors] = useState("");
   // Handlers
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
@@ -58,14 +61,20 @@ function App() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     const { title, description, imageURL, price } = product;
     event.preventDefault();
-    const errors = productValidation({ title, description, imageURL, price });
+    const errors = productValidation({
+      title,
+      description,
+      imageURL,
+      price,
+    });
     const hasErrors = Object.values(errors).some((err) => err !== "");
-    if (hasErrors) {
+    if (hasErrors || tmpColors.length === 0) {
       setErrors(errors);
+      setValidateColors("Please select at least one color");
       return;
     }
     setProducts((prev) => [
-      { ...product, id: uuid(), colors: tmpColors },
+      { ...product, id: uuid(), colors: tmpColors, category: selectedCategory },
       ...prev,
     ]);
     setProduct(defaultProductObj);
@@ -106,6 +115,7 @@ function App() {
           handleTmpColors(color);
           return;
         }
+        setValidateColors("");
         setTmpColors((prev) => [...prev, color]);
       }}
     />
@@ -139,8 +149,13 @@ function App() {
       <Modal isOpen={isOpen} closeModal={closeModal} title="Add A New Product">
         <form className="space-y-3" onSubmit={handleSubmit}>
           {formRender}
+          <Select
+            selected={selectedCategory}
+            setSelected={setSelectedCategory}
+          />
           <div className="flex items-center flex-wrap gap-1 mt-4">
             {colorsRender}
+            {validateColors && <ErrorsMsg msg={validateColors} />}
           </div>
           <div className="flex items-center flex-wrap gap-1 mt-4">
             {tmpColorsRender}

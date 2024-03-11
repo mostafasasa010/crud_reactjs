@@ -13,14 +13,14 @@ export const productValidation = (product: {
   description: string;
   imageURL: string;
   price: string;
-}) => {
+}): {
+  title: string;
+  description: string;
+  imageURL: string;
+  price: string;
+} => {
   // Initialize an object to store error messages for each property
-  const errors: {
-    title: string;
-    description: string;
-    imageURL: string;
-    price: string;
-  } = {
+  const errors = {
     title: "",
     description: "",
     imageURL: "",
@@ -61,7 +61,6 @@ export const productValidation = (product: {
   ) {
     errors.price = "Price must be a valid number greater than 0!";
   }
-
   // Return the object containing error messages for invalid properties
   return errors;
 };
