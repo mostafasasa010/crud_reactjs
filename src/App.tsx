@@ -270,10 +270,12 @@ function App() {
             "imageURL"
           )}
           {productEditWithErrorsRender("price", "Product Price", "price")}
-          {/* <Select
-            selected={selectedCategory}
-            setSelected={setSelectedCategory}
-          /> */}
+          <Select
+            selected={editProduct.category}
+            setSelected={(value) =>
+              setEditProduct({ ...editProduct, category: value })
+            }
+          />
           <div className="flex items-center flex-wrap gap-1 mt-4">
             {colorsRender}
             {validateColors && <ErrorsMsg msg={validateColors} />}
