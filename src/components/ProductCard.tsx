@@ -6,14 +6,21 @@ import CircleColors from "./CircleColors";
 
 interface IProps {
   product: IProduct;
+  setEditProduct: (product: IProduct) => void;
+  openEditModal: () => void;
 }
 
-const ProductCard = ({ product }: IProps) => {
+const ProductCard = ({ product, setEditProduct, openEditModal }: IProps) => {
   const { title, description, imageURL, price, colors, category } = product;
   // Renders
   const colorsRender = colors.map((color) => (
     <CircleColors color={color} title={color} key={color} />
   ));
+  // Handlers
+  const onEdit = () => {
+    setEditProduct(product);
+    openEditModal();
+  };
   return (
     <div className="flex flex-col p-4 rounded-md border-2 border-gray-200 justify-between lg:max-w-xs mx-auto">
       <Image
@@ -35,7 +42,9 @@ const ProductCard = ({ product }: IProps) => {
         />
       </div>
       <div className="flex gap-4 mt-4">
-        <Button className="bg-indigo-500">Edit</Button>
+        <Button className="bg-indigo-500" onClick={onEdit}>
+          Edit
+        </Button>
         <Button className="bg-red-500">Delete</Button>
       </div>
     </div>
