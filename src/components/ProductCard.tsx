@@ -1,7 +1,7 @@
 import Image from "./Image";
 import { IProduct } from "../interfaces";
 import Button from "./ui/Button";
-import { txtSlicer } from "../utils/functions";
+import { addCommasToPrice, txtSlicer } from "../utils/functions";
 import CircleColors from "./CircleColors";
 
 interface IProps {
@@ -24,6 +24,8 @@ const ProductCard = ({
   const colorsRender = colors.map((color) => (
     <CircleColors color={color} title={color} key={color} />
   ));
+  console.log(colors);
+
   // Handlers
   const onEdit = () => {
     setEditProduct(product);
@@ -41,14 +43,25 @@ const ProductCard = ({
         <h1 className="text-xl font-semibold mb-3">{title}</h1>
         <p className="text-sm text-gray-500">{txtSlicer(description)}</p>
       </div>
-      <div className="flex items-center gap-2 mt-4">{colorsRender}</div>
+      <div className="flex items-center gap-1 mt-4">
+        {colorsRender.length !== 0 ? (
+          colorsRender
+        ) : (
+          <p className="min-h-[20px]">Not available colors!</p>
+        )}
+      </div>
       <div className="flex items-center justify-between mt-4">
-        <span className="text-lg text-indigo-500 font-semibold ">${price}</span>
-        <Image
-          imageSrc={category.imageURL}
-          imageAlt={category.name}
-          className="w-10 h-10 rounded-full object-cover"
-        />
+        <span className="text-lg text-indigo-500 font-semibold ">
+          ${addCommasToPrice(price)}
+        </span>
+        <div className="flex items-center gap-1">
+          <span>{category.name}</span>
+          <Image
+            imageSrc={category.imageURL}
+            imageAlt={category.name}
+            className="w-10 h-10 rounded-full object-cover"
+          />
+        </div>
       </div>
       <div className="flex gap-4 mt-4">
         <Button className="bg-indigo-500" onClick={onEdit}>

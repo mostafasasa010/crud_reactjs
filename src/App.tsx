@@ -108,11 +108,11 @@ function App() {
       price,
     });
     const hasErrors = Object.values(errors).some((err) => err !== "");
-    // if (hasErrors || tmpColors.length === 0) {
-    //   setErrors(errors);
-    //   setValidateColors("Please select at least one color");
-    //   return;
-    // }
+    if (hasErrors || tmpColors.concat(editProduct.colors).length === 0) {
+      setErrors(errors);
+      setValidateColors("Please select at least one color");
+      return;
+    }
     if (hasErrors) {
       setErrors(errors);
       return;
@@ -224,6 +224,7 @@ function App() {
       <div className="grid gap-4 lg:gap-6 xl:gap-8 2xl:gap10 p-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {productRender}
       </div>
+      {/* New Product */}
       <Modal isOpen={isOpen} closeModal={closeModal} title="Add A New Product">
         <form className="space-y-3" onSubmit={handleSubmit}>
           {formRender}
@@ -252,6 +253,7 @@ function App() {
           </div>
         </form>
       </Modal>
+      {/* Edit Product */}
       <Modal
         isOpen={isOpenEdit}
         closeModal={closeEditModal}
