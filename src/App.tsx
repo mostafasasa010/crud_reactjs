@@ -37,6 +37,7 @@ function App() {
   const [tmpColors, setTmpColors] = useState<string[]>([]);
   const [products, setProducts] = useState<IProduct[]>(productList);
   const [editProduct, setEditProduct] = useState<IProduct>(defaultProductObj);
+  const [indexEditProduct, setIndexEditProduct] = useState(0);
   const [product, setProduct] = useState<IProduct>(defaultProductObj);
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [validateColors, setValidateColors] = useState("");
@@ -107,14 +108,24 @@ function App() {
       price,
     });
     const hasErrors = Object.values(errors).some((err) => err !== "");
-    if (hasErrors || tmpColors.length === 0) {
+    // if (hasErrors || tmpColors.length === 0) {
+    //   setErrors(errors);
+    //   setValidateColors("Please select at least one color");
+    //   return;
+    // }
+    if (hasErrors) {
       setErrors(errors);
-      setValidateColors("Please select at least one color");
       return;
     }
+    const updatedProduct = [...products];
+    updatedProduct[indexEditProduct] = {
+      ...editProduct,
+      colors: tmpColors.concat(editProduct.colors),
+    };
+    setProducts(updatedProduct);
     setEditProduct(defaultProductObj);
     setTmpColors([]);
-    closeModal();
+    closeEditModal();
   };
   // Renders
   const formRender = formInputsList.map((input) => {
@@ -137,12 +148,14 @@ function App() {
       </div>
     );
   });
-  const productRender = products.map((product) => (
+  const productRender = products.map((product, index) => (
     <ProductCard
       key={product.id}
       product={product}
       setEditProduct={setEditProduct}
       openEditModal={openEditModal}
+      setIndexEditProduct={setIndexEditProduct}
+      indexEditProduct={index}
     />
   ));
   const colorsRender = colors.map((color) => (
@@ -152,6 +165,10 @@ function App() {
       key={color}
       onClick={() => {
         if (tmpColors.includes(color)) {
+          handleTmpColors(color);
+          return;
+        }
+        if (editProduct.colors.includes(color)) {
           handleTmpColors(color);
           return;
         }
@@ -253,18 +270,29 @@ function App() {
             "imageURL"
           )}
           {productEditWithErrorsRender("price", "Product Price", "price")}
-          {/* {formRender} */}
           {/* <Select
             selected={selectedCategory}
             setSelected={setSelectedCategory}
           /> */}
-          {/* <div className="flex items-center flex-wrap gap-1 mt-4">
+          <div className="flex items-center flex-wrap gap-1 mt-4">
             {colorsRender}
             {validateColors && <ErrorsMsg msg={validateColors} />}
-          </div> */}
-          {/* <div className="flex items-center flex-wrap gap-1 mt-4">
-            {tmpColorsRender}
-          </div> */}
+          </div>
+          <div className="flex items-center flex-wrap gap-1 mt-4">
+            {tmpColors.concat(editProduct.colors).map((color) => {
+              return (
+                <span
+                  className="py-[2px] px-[6px] rounded-md text-white cursor-pointer text-sm font-semibold"
+                  style={{ backgroundColor: color }}
+                  title={color}
+                  key={color}
+                  onClick={() => handleTmpColors(color)}
+                >
+                  {color}
+                </span>
+              );
+            })}
+          </div>
           <div className="flex items-center gap-3">
             <Button className="bg-indigo-500" width="w-full">
               Submit
