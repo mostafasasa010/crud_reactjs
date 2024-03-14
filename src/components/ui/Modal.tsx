@@ -5,10 +5,17 @@ interface IProps {
   isOpen: boolean;
   closeModal: () => void;
   title?: string;
+  description?: string;
   children: ReactNode;
 }
 
-const Modal = ({ isOpen, closeModal, title, children }: IProps) => {
+const Modal = ({
+  isOpen,
+  closeModal,
+  title,
+  description,
+  children,
+}: IProps) => {
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
@@ -44,6 +51,9 @@ const Modal = ({ isOpen, closeModal, title, children }: IProps) => {
                     >
                       {title}
                     </Dialog.Title>
+                  )}
+                  {description && (
+                    <p className="text-sm text-gray-500 mt-3">{description}</p>
                   )}
                   <div className="mt-6">{children}</div>
                 </Dialog.Panel>

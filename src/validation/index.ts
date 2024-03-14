@@ -19,7 +19,6 @@ export const productValidation = (product: {
   imageURL: string;
   price: string;
 } => {
-  // Initialize an object to store error messages for each property
   const errors = {
     title: "",
     description: "",
@@ -27,10 +26,8 @@ export const productValidation = (product: {
     price: "",
   };
 
-  // Regular expression to validate URL format
   const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/.test(product.imageURL);
 
-  // Validate title
   if (
     !product.title.trim() ||
     product.title.length < 10 ||
@@ -39,7 +36,6 @@ export const productValidation = (product: {
     errors.title = "Title must be between 10 and 80 characters!";
   }
 
-  // Validate description
   if (
     !product.description.trim() ||
     product.description.length < 10 ||
@@ -48,12 +44,10 @@ export const productValidation = (product: {
     errors.description = "Description must be between 10 and 900 characters!";
   }
 
-  // Validate imageURL
   if (!product.imageURL.trim() || !urlRegex) {
     errors.imageURL = "Invalid Image URL!";
   }
 
-  // Validate price
   if (
     !product.price.trim() ||
     isNaN(Number(product.price)) ||
@@ -61,6 +55,6 @@ export const productValidation = (product: {
   ) {
     errors.price = "Price must be a valid number greater than 0!";
   }
-  // Return the object containing error messages for invalid properties
+
   return errors;
 };

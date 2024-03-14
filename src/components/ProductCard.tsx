@@ -10,6 +10,7 @@ interface IProps {
   openEditModal: () => void;
   indexEditProduct: number;
   setIndexEditProduct: (value: number) => void;
+  openConfirmModal: () => void;
 }
 
 const ProductCard = ({
@@ -18,13 +19,15 @@ const ProductCard = ({
   openEditModal,
   indexEditProduct,
   setIndexEditProduct,
+  openConfirmModal,
 }: IProps) => {
+  // CONSTANTS
   const { title, description, imageURL, price, colors, category } = product;
+
   // Renders
   const colorsRender = colors.map((color) => (
     <CircleColors color={color} title={color} key={color} />
   ));
-  console.log(colors);
 
   // Handlers
   const onEdit = () => {
@@ -32,6 +35,12 @@ const ProductCard = ({
     setIndexEditProduct(indexEditProduct);
     openEditModal();
   };
+
+  const onDelete = () => {
+    setEditProduct(product);
+    openConfirmModal();
+  };
+
   return (
     <div className="flex flex-col p-4 rounded-md border-2 border-gray-200 justify-between lg:max-w-xs mx-auto">
       <Image
@@ -67,7 +76,9 @@ const ProductCard = ({
         <Button className="bg-indigo-500" onClick={onEdit}>
           Edit
         </Button>
-        <Button className="bg-red-500">Delete</Button>
+        <Button className="bg-red-500" onClick={onDelete}>
+          Delete
+        </Button>
       </div>
     </div>
   );

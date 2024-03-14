@@ -11,9 +11,10 @@ import CircleColors from "./components/CircleColors";
 import { v4 as uuid } from "uuid";
 import Select from "./components/ui/Select";
 import { TProductName } from "./types";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
-  // Constants
+  // CONSTANTS
   const defaultProductObj = {
     title: "",
     description: "",
@@ -25,28 +26,48 @@ function App() {
       imageURL: "",
     },
   };
-  // States
+
+  // STATES
   const [isOpen, setIsOpen] = useState(false);
+
   const [isOpenEdit, setIsOpenEdit] = useState(false);
+
   const [errors, setErrors] = useState({
     title: "",
     description: "",
     imageURL: "",
     price: "",
   });
+
   const [tmpColors, setTmpColors] = useState<string[]>([]);
+
   const [products, setProducts] = useState<IProduct[]>(productList);
+
   const [editProduct, setEditProduct] = useState<IProduct>(defaultProductObj);
+
   const [indexEditProduct, setIndexEditProduct] = useState(0);
+
   const [product, setProduct] = useState<IProduct>(defaultProductObj);
+
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+
   const [validateColors, setValidateColors] = useState("");
 
-  // Handlers
+  const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
+
+  // HANDLERS
   const closeModal = () => setIsOpen(false);
+
   const openModal = () => setIsOpen(true);
+
   const closeEditModal = () => setIsOpenEdit(false);
+
   const openEditModal = () => setIsOpenEdit(true);
+
+  const closeConfirmModal = () => setIsOpenConfirmModal(false);
+
+  const openConfirmModal = () => setIsOpenConfirmModal(true);
+
   const onChangeHandle = (event: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
     setProduct({
@@ -58,6 +79,7 @@ function App() {
       [name]: "",
     });
   };
+
   const onChangeEditHandle = (event: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
     setEditProduct({
@@ -69,12 +91,14 @@ function App() {
       [name]: "",
     });
   };
+
   const handleTmpColors = (color: string) =>
     setTmpColors((prev) => prev.filter((item) => item !== color));
   const handleCancel = (): void => {
     setProduct(defaultProductObj);
     closeModal();
   };
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     const { title, description, imageURL, price } = product;
     event.preventDefault();
@@ -97,7 +121,15 @@ function App() {
     setProduct(defaultProductObj);
     setTmpColors([]);
     closeModal();
+    toast("Product has been Added successfully!", {
+      icon: "👏",
+      style: {
+        backgroundColor: "#222",
+        color: "white",
+      },
+    });
   };
+
   const handleEditSubmit = (event: FormEvent<HTMLFormElement>): void => {
     const { title, description, imageURL, price } = editProduct;
     event.preventDefault();
@@ -126,8 +158,31 @@ function App() {
     setEditProduct(defaultProductObj);
     setTmpColors([]);
     closeEditModal();
+    toast("Product has been Updated successfully!", {
+      icon: "👏",
+      style: {
+        backgroundColor: "#222",
+        color: "white",
+      },
+    });
   };
-  // Renders
+
+  const removeProductHandler = () => {
+    const filtered = products.filter(
+      (product) => product.id !== editProduct.id
+    );
+    setProducts(filtered);
+    closeConfirmModal();
+    toast("Product has been deleted successfully!", {
+      icon: "👏",
+      style: {
+        backgroundColor: "#222",
+        color: "white",
+      },
+    });
+  };
+
+  // RENDERS
   const formRender = formInputsList.map((input) => {
     return (
       <div className="flex flex-col" key={input.id}>
@@ -148,6 +203,7 @@ function App() {
       </div>
     );
   });
+
   const productRender = products.map((product, index) => (
     <ProductCard
       key={product.id}
@@ -156,8 +212,10 @@ function App() {
       openEditModal={openEditModal}
       setIndexEditProduct={setIndexEditProduct}
       indexEditProduct={index}
+      openConfirmModal={openConfirmModal}
     />
   ));
+
   const colorsRender = colors.map((color) => (
     <CircleColors
       color={color}
@@ -177,6 +235,7 @@ function App() {
       }}
     />
   ));
+
   const tmpColorsRender = tmpColors.map((color) => {
     return (
       <span
@@ -190,6 +249,7 @@ function App() {
       </span>
     );
   });
+
   const productEditWithErrorsRender = (
     id: string,
     label: string,
@@ -311,6 +371,30 @@ function App() {
           </div>
         </form>
       </Modal>
+      {/* Delete Product */}
+      <Modal
+        isOpen={isOpenConfirmModal}
+        closeModal={closeConfirmModal}
+        title="Are you sure you want to remove this Product from your Store?"
+        description="Deleting this product will remove it permanently from your inventory. Any associated data, sales history, and other related information will also be deleted. Please make sure this is the intended action."
+      >
+        <div className="flex items-center space-x-3">
+          <Button
+            className="bg-[#c2344d] hover:bg-red-800"
+            onClick={removeProductHandler}
+          >
+            Yes, remove
+          </Button>
+          <Button
+            type="button"
+            className="bg-[#f5f5fa] hover:bg-gray-300 !text-black"
+            onClick={closeConfirmModal}
+          >
+            Cancel
+          </Button>
+        </div>
+      </Modal>
+      <Toaster />
     </main>
   );
 }
