@@ -1,8 +1,10 @@
+/* eslint-disable react-refresh/only-export-components */
 import Image from "./Image";
 import { IProduct } from "../interfaces";
 import Button from "./ui/Button";
 import { addCommasToPrice, txtSlicer } from "../utils/functions";
 import CircleColors from "./CircleColors";
+import { memo } from "react";
 
 interface IProps {
   product: IProduct;
@@ -84,4 +86,4 @@ const ProductCard = ({
   );
 };
 
-export default ProductCard;
+export default memo(ProductCard);

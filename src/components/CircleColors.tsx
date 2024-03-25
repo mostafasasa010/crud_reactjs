@@ -1,4 +1,5 @@
-import { HTMLAttributes } from "react";
+/* eslint-disable react-refresh/only-export-components */
+import { HTMLAttributes, memo } from "react";
 
 interface IProps extends HTMLAttributes<HTMLSpanElement> {
   color: string;
@@ -14,4 +15,4 @@ const CircleColors = ({ color, ...rest }: IProps) => {
   );
 };
 
-export default CircleColors;
+export default memo(CircleColors);

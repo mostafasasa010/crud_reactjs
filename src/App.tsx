@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useRef, useState } from "react";
 import ProductCard from "./components/ProductCard";
 import { categories, colors, formInputsList, productList } from "./data";
 import Button from "./components/ui/Button";
@@ -28,6 +28,8 @@ function App() {
   };
 
   // STATES
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
   const [isOpen, setIsOpen] = useState(false);
 
   const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -62,35 +64,26 @@ function App() {
 
   const closeEditModal = () => setIsOpenEdit(false);
 
-  const openEditModal = () => setIsOpenEdit(true);
+  const openEditModal = useCallback(() => setIsOpenEdit(true), []);
 
   const closeConfirmModal = () => setIsOpenConfirmModal(false);
 
-  const openConfirmModal = () => setIsOpenConfirmModal(true);
+  const openConfirmModal = useCallback(() => setIsOpenConfirmModal(true), []);
 
-  const onChangeHandle = (event: ChangeEvent<HTMLInputElement>) => {
+  const onChangeHandle = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
-    setProduct({
-      ...product,
-      [name]: value,
-    });
-    setErrors({
-      ...errors,
-      [name]: "",
-    });
-  };
+    setProduct((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+  }, []);
 
-  const onChangeEditHandle = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = event.target;
-    setEditProduct({
-      ...editProduct,
-      [name]: value,
-    });
-    setErrors({
-      ...errors,
-      [name]: "",
-    });
-  };
+  const onChangeEditHandle = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const { value, name } = event.target;
+      setEditProduct((prev) => ({ ...prev, [name]: value }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    },
+    []
+  );
 
   const handleTmpColors = (color: string) =>
     setTmpColors((prev) => prev.filter((item) => item !== color));
@@ -182,6 +175,19 @@ function App() {
     });
   };
 
+  const handleClick = (color: string) => {
+    if (tmpColors.includes(color)) {
+      handleTmpColors(color);
+      return;
+    }
+    if (editProduct.colors.includes(color)) {
+      handleTmpColors(color);
+      return;
+    }
+    setValidateColors("");
+    setTmpColors((prev) => [...prev, color]);
+  };
+
   // RENDERS
   const formRender = formInputsList.map((input) => {
     return (
@@ -196,8 +202,9 @@ function App() {
           id={input.id}
           name={input.name}
           type={input.type}
-          onChange={(e) => onChangeHandle(e)}
+          onChange={onChangeHandle}
           value={product[input.name]}
+          ref={inputRef}
         />
         <ErrorsMsg msg={errors[input.name]} />
       </div>
@@ -221,18 +228,7 @@ function App() {
       color={color}
       title={color}
       key={color}
-      onClick={() => {
-        if (tmpColors.includes(color)) {
-          handleTmpColors(color);
-          return;
-        }
-        if (editProduct.colors.includes(color)) {
-          handleTmpColors(color);
-          return;
-        }
-        setValidateColors("");
-        setTmpColors((prev) => [...prev, color]);
-      }}
+      onClick={() => handleClick(color)}
     />
   ));
 
@@ -264,7 +260,7 @@ function App() {
           id={id}
           name={name}
           type={"text"}
-          onChange={(e) => onChangeEditHandle(e)}
+          onChange={onChangeEditHandle}
           value={editProduct[name]}
         />
         <ErrorsMsg msg={errors[name]} />
